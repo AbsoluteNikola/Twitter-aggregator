@@ -1,0 +1,7 @@
+*~
+__pycache__
+secrets.py
+following.txt
+users.json
+*.conf
+!*.conf.example
