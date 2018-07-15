@@ -1,6 +1,6 @@
 import requests
 from json import loads
-from settings import SMMRY_key, SMMRY_length
+from secrets import SMMRY_key, SMMRY_length
 
 def request_summary(text, is_url=False, sentences=SMMRY_length):
     parameters = {

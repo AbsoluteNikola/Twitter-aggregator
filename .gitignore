@@ -5,3 +5,4 @@ following.txt
 users.json
 *.conf
 !*.conf.example
+*.db

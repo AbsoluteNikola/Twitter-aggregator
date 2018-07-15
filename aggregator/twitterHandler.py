@@ -1,12 +1,12 @@
 import json
 import twitter
-from secrets import *
+from secrets import c_key, c_secret, at_key, at_secret
 from pprint import pprint
 
 # Credentials are stored in secrets.py
 api = twitter.Api(consumer_key=c_key, consumer_secret=c_secret, access_token_key=at_key, access_token_secret=at_secret)
 
-def strip_status(status:twitter.models.Status):
+def strip_status(status: twitter.models.Status):
     stat_d = status.AsDict()
     return (
         stat_d['id'],
