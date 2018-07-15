@@ -1,2 +1,11 @@
 [DEFAULT]
 follow_file = ./following.txt
+
+[TWITTER]
+consumer_key = 123
+consumer_secret = 456
+application_key = 789
+application_secret = 000
+
+[DataBase]
+path = //

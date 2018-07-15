@@ -1,8 +1,7 @@
 import json
 import twitter
 from pprint import pprint
-from .secrets import c_key, c_secret, at_key, at_secret
-from .config import follow_file
+from .config import follow_file, c_key, c_secret, at_key, at_secret
 
 # Credentials are stored in secrets.py
 api = twitter.Api(consumer_key=c_key, consumer_secret=c_secret, access_token_key=at_key, access_token_secret=at_secret)
