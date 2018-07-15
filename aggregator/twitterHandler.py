@@ -1,7 +1,8 @@
 import json
 import twitter
-from secrets import c_key, c_secret, at_key, at_secret
 from pprint import pprint
+from .secrets import c_key, c_secret, at_key, at_secret
+from .config import follow_file
 
 # Credentials are stored in secrets.py
 api = twitter.Api(consumer_key=c_key, consumer_secret=c_secret, access_token_key=at_key, access_token_secret=at_secret)
@@ -18,7 +19,7 @@ def strip_status(status: twitter.models.Status):
 def get_timeline():
     global_timeline = []
 
-    with open("following.txt", "r") as file:
+    with open(follow_file, "r") as file:
         track = file.readlines()
 
     for name in track:
