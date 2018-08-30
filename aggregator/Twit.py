@@ -17,18 +17,22 @@ class Twit(Base):
     created_at = Column(DateTime)
     user = Column(Unicode(64))
     text = Column(Unicode(150))
-    _keywords_arr = []
+    _keywords_str = Column('keywords', Unicode(500))
 
-    @hybrid_property
-    def keywords(self):
-        return json.dumps(self.keywords_arr)
+    @property
+    def keywords(self) -> list:
+        return json.loads(self._keywords_str)
+    
+    @keywords.setter
+    def keywords(self, new_keywords: list):
+        self._keywords_str = json.dumps(new_keywords, separators=(',', ':'))
 
     def __init__(self, info: tuple):
         self.id = info[0]
         self.created_at = datetime.strptime(info[1], "%a %b %d %H:%M:%S %z %Y") # Date format is "Tue May 1 16:45:37 +0000 2018"
         self.user = info[2]
         self.text = info[3]
-        self._keywords_arr = get_keywords(self.text)
+        self.keywords = get_keywords(self.text)
 
     def __repr__(self):
         return f"<Twit id={self.id} user='{self.user}' created_at={self.created_at} text='{self.text}'>"
