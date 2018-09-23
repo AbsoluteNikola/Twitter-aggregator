@@ -6,6 +6,7 @@ consumer_key = 123
 consumer_secret = 456
 application_key = 789
 application_secret = 000
+update_timeout = 60
 
 [DataBase]
 path = //

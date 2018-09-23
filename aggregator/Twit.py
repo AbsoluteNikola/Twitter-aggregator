@@ -12,6 +12,7 @@ Base = declarative_base()
 
 class Twit(Base):
     __tablename__ = "twits"
+    __table_args__ = {'useexisting': True}
 
     id = Column(Integer, primary_key=True)
     created_at = Column(DateTime)
