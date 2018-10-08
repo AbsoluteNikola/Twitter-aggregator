@@ -18,7 +18,8 @@ def preprocess_text(txt: str):
     txt = ' '.join(txt)
     return txt
 
-def get_keywords(text):
+def get_keywords(twit):
+    text = twit.text
     rake = Rake()
     lemm = WordNetLemmatizer()
 
@@ -28,5 +29,6 @@ def get_keywords(text):
     rake.extract_keywords_from_text(sanitized)
 
     keywords = [(score, lemm.lemmatize(word)) for score, word in rake.get_ranked_phrases_with_scores()]
+    keywords.append((1, twit.user))
 
     return keywords

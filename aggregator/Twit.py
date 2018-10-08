@@ -33,7 +33,7 @@ class Twit(Base):
         self.created_at = datetime.strptime(info[1], "%a %b %d %H:%M:%S %z %Y") # Date format is "Tue May 1 16:45:37 +0000 2018"
         self.user = info[2]
         self.text = info[3]
-        self.keywords = get_keywords(self.text)
+        self.keywords = get_keywords(self)
 
     def __repr__(self):
         return f"<Twit id={self.id} user='{self.user}' created_at={self.created_at} text='{self.text}'>"

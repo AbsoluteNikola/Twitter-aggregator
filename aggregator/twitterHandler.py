@@ -10,7 +10,7 @@ from logging import getLogger
 logger = getLogger("aggregator.twitterHandler")
 # Credentials are stored in the config file
 api = twitter.Api(consumer_key=c_key, consumer_secret=c_secret, access_token_key=at_key, access_token_secret=at_secret)
-session = None
+session = Session()
 
 def strip_status(status: twitter.models.Status):
     stat_d = status.AsDict()
@@ -52,15 +52,13 @@ async def update_db(users):
     session.commit()
 
 async def keep_twits_updated():
-    global session
-    with Session() as session:
-        while True:
-            subs = [res[0] for res in engine.execute(subs_table.select()).fetchall()]
-            logger.debug("Tracking %s" % str(subs))
-            logger.info("New update")
-            await update_db(subs)
-            logger.info("Waiting %d seconds" % update_delay)
-            await asyncio.sleep(update_delay)
+    while True:
+        subs = [res[0] for res in engine.execute(subs_table.select()).fetchall()]
+        logger.debug("Tracking %s" % str(subs))
+        logger.info("New update")
+        await update_db(subs)
+        logger.info("Waiting %d seconds" % update_delay)
+        await asyncio.sleep(update_delay)
 
 if __name__ == '__main__':
     pprint(get_timeline(""))

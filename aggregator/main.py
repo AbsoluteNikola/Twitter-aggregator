@@ -3,8 +3,8 @@ import uvloop
 from sqlalchemy.exc import IntegrityError
 from .databaseManager import Session, engine, subs_table
 from .twitterHandler import keep_twits_updated
+from .cachingHandler import keep_cache_updated
 from .Twit import Twit
-from .config import update_timeout
 from pprint import pprint
 from logging import getLogger
 
@@ -15,6 +15,7 @@ def run():
     loop = asyncio.get_event_loop()
 
     asyncio.ensure_future(keep_twits_updated())
+    asyncio.ensure_future(keep_cache_updated())
     try:
         logger.info("Starting operation")
         loop.run_forever()
