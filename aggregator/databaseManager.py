@@ -10,3 +10,6 @@ subs_table = Table('subscriptions', metadata,
     Column('name', String(64), primary_key=True, nullable=False)
 )
 subs_table.create(engine, checkfirst=True)
+
+def add_subscription(sub:str):
+    engine.execute(subs_table.insert(), name=sub)

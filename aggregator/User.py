@@ -10,18 +10,56 @@ from .databaseManager import Session, engine
 Base = declarative_base()
 
 class User(Base):
+    """Class representing users with necessary functionality
+
+    Attributes
+    ----------
+    id : int
+        User's id as used by twitter
+    registered : DateTime
+        Date and time at which this user first logged in
+    preference : dict
+        Dictionary of [keyword]->score pairs
+
+    Methods
+    -------
+    score_twit(twit: Twit) -> float
+        Score a twit based on preference
+    update_pref(twit: Twit, score: float)
+        Update preference for that particular twit.
+        Score could be either positive or negative and will affect the preference accordingly
+
+    OAuth
+    ------
+    Attributes representing an OAuth2 token:
+    token_type
+    access_token
+    refresh_token
+    expres_at
+
+    token - dict of the above
+    """
     __tablename__ = "users"
     __table_args__ = {'useexisting': True}
 
     id = Column(Integer, primary_key=True)
     registered = Column(DateTime, nullable=False)
+    #oauth_token = Column(Unicode(128), nullable=False)
+    #oauth_secret = Column(Unicode(128), nullable=False)
     #_liked_tweets_enc = Column("liked", Unicode(2018), nullable=False)
     # Just another jsoned value. There should be a better way to make these
     _preference_vector_enc = Column("preference", Unicode(2048), nullable=False)
 
-    def __init__(self):
+    token_type = Column(String(20))
+    access_token = Column(String(48), nullable=False)
+    refresh_token = Column(String(48))
+    expires_at = Column(Integer, default=0)
+
+    def __init__(self, token, secret):
         self.registered = datetime.now()
         self.preference = {}
+        self.oauth_token = token
+        self.oauth_secret = secret
 
     @property
     def preference(self) -> list:
@@ -48,6 +86,22 @@ class User(Base):
             except KeyError:
                 pass
             self.preference[key] = curr_pref + val * score # Positive or negative
+
+    @property
+    def token(self):
+        return dict(
+            access_token=self.access_token,
+            token_type=self.token_type,
+            refresh_token=self.refresh_token,
+            expires_at=self.expires_at,
+        )
+
+    @token.setter
+    def token_set(self, token):
+        self.access_token = token['access_token']
+        self.token_type = token['token_type']
+        self.expires_at = token['expires_at']
+        self.refresh_token = token['refresh_token']
 
     def __repr__(self):
         return f"<User id={self.id} registered_at={self.registered}>"

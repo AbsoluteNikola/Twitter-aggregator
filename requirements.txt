@@ -2,3 +2,5 @@ nltk # Add 'wordnet' and 'stopwords' corpuses manually. Do python -c "import nlt
 rake_nltk
 sqlalchemy
 twitter
+flask
+authlib

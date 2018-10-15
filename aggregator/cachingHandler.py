@@ -39,5 +39,5 @@ async def keep_cache_updated():
         logger.debug("User list: %s" % str(users))
         for user in users:
             loop.ensure_future(update_cache(user))
-        logger.debug("Sleeping for %d seconds" % cache_delay)
+        logger.info("Sleeping for %d seconds" % cache_delay)
         await asyncio.sleep(cache_delay)

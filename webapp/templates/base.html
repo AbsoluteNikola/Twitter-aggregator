@@ -1,0 +1,19 @@
+<html>
+  <head>
+    <title>{% block title %}{% endblock %} | Twitter Aggregator</title>
+    {% block head %}{% endblock %}
+  </head>
+  <body>
+    <div id="top">
+      <div id="forehead">
+        <h1>
+          Twitter aggregator
+        </h1>
+      </div>
+      <div id="content">
+        {% block content %}
+        {% endblock content %}
+      </div>
+    </div>
+  </body>
+</html>
