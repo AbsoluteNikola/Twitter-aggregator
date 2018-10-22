@@ -6,3 +6,4 @@ users.json
 *.conf
 !*.conf.example
 *.db
+.DS_Store

@@ -1,14 +1,34 @@
 <html>
   <head>
     <title>{% block title %}{% endblock %} | Twitter Aggregator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <!-- <link rel="stylesheet" type="text/css" href="https://www.w3schools.com/w3css/4/w3pro.css"> -->
+    <link rel="stylesheet" type="text/css" href="https://www.w3schools.com/w3css/4/w3.css">
     {% block head %}{% endblock %}
   </head>
   <body>
     <div id="top">
-      <div id="forehead">
-        <h1>
-          Twitter aggregator
-        </h1>
+      <div class="w3-cell-row" id="forehead">
+        <div class="w3-cell-middle">
+          <h1 class="w3-container">
+            Twitter aggregator
+          </h1>
+        </div>
+        {% if session.logged_in == True %}
+        <div class="auth w3-cell w3-container w3-padding-24 w3-pale-green" id="auth-pos">
+          You are logged in.
+          <a href="{{ url_for('logout') }}" class="w3-button">
+            Log out.
+          </div>
+        {% else %}
+        <div class="auth w3-cell w3-container w3-padding-24 w3-pale-red" id="auth-neg">
+          You are not logged in
+          <a href="{{ url_for('login') }}">
+            <img src="{{ url_for('static', filename='twitter_signin.png') }}"">
+          </a>
+        {% endif %}
+        </div>
       </div>
       <div id="content">
         {% block content %}
