@@ -12,7 +12,7 @@ callback = 'http://94.140.251.57:9876/twitter'
 qcallbc = quote(callback)
 twitter = 'https://api.twitter.com/oauth/request_token'
 c_key = 
-c_secret = 
+c_secret = ''
 s = rq.Session()
 
 

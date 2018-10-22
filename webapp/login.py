@@ -18,6 +18,7 @@ twitter_auth_red = 'https://api.twitter.com/oauth/authenticate'
 twitter_ac_token = 'https://api.twitter.com/oauth/access_token'
 twitter_verify_c = 'https://api.twitter.com/1.1/account/verify_credentials.json'
 
+
 def sign_request(method: str, url: str, parameters: dict, **kwargs) -> str:
     sign_keys = []
     for key, val in chain(parameters.items(), kwargs.items()):
@@ -30,9 +31,11 @@ def sign_request(method: str, url: str, parameters: dict, **kwargs) -> str:
     sign = '&'.join(map(quote, sign_parts))
     return sign
 
+
 def hmac_sha1(msg, consumer_key='', access_token=''):
     hashed = hmac.new(f'{consumer_key}&{access_token}'.encode('ascii'), msg.encode('ascii'), sha1)
     return quote(b64encode(hashed.digest()).decode('ascii'))
+
 
 def get_request_token():
     t = str(int(time()))
@@ -59,8 +62,9 @@ def get_request_token():
     resp = rq.post(twitter_rq_token, headers=headers)
     params = resp.text
     pprint(params)
-    ret = {pair.split('=')[0]:pair.split('=')[1] for pair in params.split('&')}
+    ret = {pair.split('=')[0]: pair.split('=')[1] for pair in params.split('&')}
     return ret
+
 
 def get_access_token(request_token, verifier):
     t = str(int(time()))
@@ -90,8 +94,9 @@ def get_access_token(request_token, verifier):
     resp = rq.post(twitter_ac_token, headers=headers, data=bin_data)
     params = resp.text
     pprint(params)
-    ret = {pair.split('=')[0]:pair.split('=')[1] for pair in params.split('&')}
+    ret = {pair.split('=')[0]: pair.split('=')[1] for pair in params.split('&')}
     return ret
+
 
 def verify_credentials():
     t = str(int(time()))
@@ -112,27 +117,30 @@ def verify_credentials():
     pprint(ans)
     return ans
 
+
 @app.route('/login')
 def login():
     token = get_request_token()
     if token['oauth_callback_confirmed'] != 'true':
-        return render_template('404.html'), 401 # !!!!!
+        return render_template('404.html'), 401  # !!!!!
     session['oauth_token'] = token['oauth_token']
     session['oauth_token_secret'] = token['oauth_token_secret']
     return redirect(twitter_auth_red + "?oauth_token={}".format(session['oauth_token']), code=302)
+
 
 @app.route('/authorized')
 def authorized():
     token = request.args.get('oauth_token')
     verifier = request.args.get('oauth_verifier')
     if token != session['oauth_token']:
-        return render_template("404.html"), 401 #!!!
+        return render_template("404.html"), 401  # !!!
     access_token = get_access_token(token, verifier)
     session['oauth_access_token'] = access_token['oauth_token']
     session['oauth_access_token_secret'] = access_token['oauth_token_secret']
     session['logged_in'] = True
     verify_credentials()
     return redirect(url_for('index'))
+
 
 @app.route('/logout')
 def logout():
