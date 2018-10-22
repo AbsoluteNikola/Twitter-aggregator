@@ -96,16 +96,17 @@ def get_access_token(request_token, verifier):
 def verify_credentials():
     t = str(int(time()))
     nonce = md5(urandom(24)).hexdigest()
+    oauth_token = session['oauth_access_token']
     credentials = {
         'oauth_consumer_key': c_key,
-        'oauth_token': session['oauth_access_token'],
+        'oauth_token': oauth_token,
         'oauth_nonce': nonce,
         'oauth_signature_method': 'HMAC-SHA1',
         'oauth_timestamp': t,
         'oauth_version': '1.0'
     }
     sign = sign_request('GET', twitter_verify_c, credentials)
-    sign = hmac_sha1(sign, c_secret)
+    sign = hmac_sha1(sign, c_secret, oauth_token)
     resp = rq.get(twitter_verify_c, params=credentials)
     ans = resp.json()
     pprint(ans)
