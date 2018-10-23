@@ -1,0 +1,10 @@
+{% extends "base_info.html.j2" %}
+{% block title %}Error 404{% endblock %}
+{% block info_title %}
+  <h1>Error 404</h1>
+{% endblock %}
+{% block info_content %}
+  <h3>Whoops....</h3>
+  <a href="{{ url_for('index') }}">Index page</a>
+  <br/>
+{% endblock %}
