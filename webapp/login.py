@@ -20,6 +20,7 @@ twitter_auth_red = 'https://api.twitter.com/oauth/authenticate'
 twitter_ac_token = 'https://api.twitter.com/oauth/access_token'
 twitter_verify_c = 'https://api.twitter.com/1.1/account/verify_credentials.json'
 
+
 def sign_request(method: str, url: str, parameters: dict, **kwargs) -> str:
     sign_keys = []
     for key, val in chain(parameters.items(), kwargs.items()):
@@ -32,9 +33,11 @@ def sign_request(method: str, url: str, parameters: dict, **kwargs) -> str:
     sign = '&'.join(map(quote, sign_parts))
     return sign
 
+
 def hmac_sha1(msg, consumer_key='', access_token=''):
     hashed = hmac.new(f'{consumer_key}&{access_token}'.encode('ascii'), msg.encode('ascii'), sha1)
     return quote(b64encode(hashed.digest()).decode('ascii'))
+
 
 def make_api_request(method, url, params=None, payload=None, creds=None, access_token=None, *args, **kwargs):
     # Add new data
@@ -45,7 +48,7 @@ def make_api_request(method, url, params=None, payload=None, creds=None, access_
     if 'oauth_callback' in creds.keys():
         creds['oauth_callback'] = quote(creds['oauth_callback'])
     # sort parameters
-    params = {key:val for key, val in sorted(params.items())}
+    params = {key: val for key, val in sorted(params.items())}
     # sort headers
     header_parts = list(creds.items())
     header_parts.append(("oauth_signature", sign))
@@ -61,12 +64,13 @@ def make_api_request(method, url, params=None, payload=None, creds=None, access_
     bin_data = b'&'.join([(f'{key}={val}').encode() for key, val in payload_parts])
     # Make request
     resp = rq.__getattribute__(method.lower())(url, params=params, headers=headers, data=bin_data)
-    #pprint(resp)
-    #if not resp.ok:
+    # pprint(resp)
+    # if not resp.ok:
     #    raise ValueError(resp.text)
     txt = resp.text
     pprint(txt)
     return txt
+
 
 def make_oauth_credentials(**kwargs):
     t = str(int(time()))
@@ -81,12 +85,14 @@ def make_oauth_credentials(**kwargs):
     }
     return credentials
 
+
 def get_request_token():
     credentials = make_oauth_credentials(oauth_callback=url_for('authorized', _external=True))
-        
+
     resp = make_api_request('POST', twitter_rq_token, {}, {}, credentials)
-    ret = {pair.split('=')[0]:pair.split('=')[1] for pair in resp.split('&')}
+    ret = {pair.split('=')[0]: pair.split('=')[1] for pair in resp.split('&')}
     return ret
+
 
 def get_access_token(request_token, verifier):
     credentials = make_oauth_credentials(oauth_token=request_token)
@@ -94,8 +100,9 @@ def get_access_token(request_token, verifier):
         'oauth_verifier': verifier
     }
     resp = make_api_request('POST', twitter_ac_token, {}, credentials, payload)
-    ret = {pair.split('=')[0]:pair.split('=')[1] for pair in resp.split('&')}
+    ret = {pair.split('=')[0]: pair.split('=')[1] for pair in resp.split('&')}
     return ret
+
 
 def verify_credentials():
     oauth_token = session['oauth_access_token']
@@ -108,21 +115,23 @@ def verify_credentials():
         ret = resp
     return ret
 
+
 @app.route('/login')
 def login():
     token = get_request_token()
     if token['oauth_callback_confirmed'] != 'true':
-        return render_template('404.html'), 401 # !!!!!
+        return render_template('404.html'), 401  # !!!!!
     session['oauth_token'] = token['oauth_token']
     session['oauth_token_secret'] = token['oauth_token_secret']
     return redirect(twitter_auth_red + "?oauth_token={}".format(session['oauth_token']), code=302)
+
 
 @app.route('/authorized')
 def authorized():
     token = request.args.get('oauth_token')
     verifier = request.args.get('oauth_verifier')
     if token != session['oauth_token']:
-        return render_template("404.html"), 401 #!!!
+        return render_template("404.html"), 401  # !!!
     access_token = get_access_token(token, verifier)
     session['oauth_access_token'] = access_token['oauth_token']
     session['oauth_access_token_secret'] = access_token['oauth_token_secret']
@@ -135,10 +144,11 @@ def authorized():
     #     access_token_key=session['oauth_access_token'],
     #     access_token_secret=session['oauth_access_token_secret']
     # )
-    #pprint(a.VerifyCredentials())
+    # pprint(a.VerifyCredentials())
     session['logged_in'] = True
     redirect_url = session.pop('next', url_for('index'))
     return redirect(redirect_url)
+
 
 @app.route('/logout')
 def logout():
