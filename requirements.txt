@@ -1,7 +1,8 @@
+uvloop
 requests
 nltk # Add 'wordnet' and 'stopwords' corpuses manually. Do python -c "import nltk; nltk.download('stopwords'); nltk.download('wordnet')"
 rake_nltk
 sqlalchemy
-twitter
+python-twitter
 flask
 authlib

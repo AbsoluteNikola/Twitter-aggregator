@@ -81,6 +81,7 @@ def get_access_token(request_token, verifier):
         'oauth_verifier': verifier
     }
     sign = sign_request('POST', twitter_ac_token, parameters, **credentials)
+    pprint(sign)
     sign = hmac_sha1(sign, c_secret)
     header_parts = list(credentials.items())
     header_parts.append(("oauth_signature", sign))
@@ -94,6 +95,7 @@ def get_access_token(request_token, verifier):
     resp = rq.post(twitter_ac_token, headers=headers, data=bin_data)
     params = resp.text
     pprint(params)
+
     ret = {pair.split('=')[0]: pair.split('=')[1] for pair in params.split('&')}
     return ret
 
@@ -121,7 +123,7 @@ def verify_credentials():
 @app.route('/login')
 def login():
     token = get_request_token()
-    if token['oauth_callback_confirmed'] != 'true':
+    if token.get('oauth_callback_confirmed', '') != 'true':
         return render_template('404.html'), 401  # !!!!!
     session['oauth_token'] = token['oauth_token']
     session['oauth_token_secret'] = token['oauth_token_secret']

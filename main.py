@@ -8,6 +8,7 @@ from logging import getLogger
 
 logger = getLogger("aggregator.main")
 
+
 def setup_parser():
     arg_parser = argparse.ArgumentParser(description="Hub for using the backend of the twitter aggregator")
     arg_parser.add_argument('--verbose', '-v', action='count', help="Set verbosity level from 0 to 3")
@@ -17,6 +18,7 @@ def setup_parser():
     parse_webapp = subparser.add_parser("web", help="Run Flask webserver")
 
     return arg_parser
+
 
 def run():
     asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
@@ -30,7 +32,8 @@ def run():
     except KeyboardInterrupt:
         logger.info("Interrupted")
         loop.stop()
-    loop.close()    
+    loop.close()
+
 
 if __name__ == "__main__":
     parser = setup_parser()
