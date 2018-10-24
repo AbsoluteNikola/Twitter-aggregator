@@ -2,4 +2,4 @@ from flask import Flask
 
 app = Flask(__name__)
 app.secret_key = b'notsosecure'
-from webapp import views, login
+from webapp import views
