@@ -1,0 +1,17 @@
+{% extends "base.html.j2" %}
+{% block title %}Error {{ error.code }}{% endblock %}
+{% block content %}
+<div class="w3-container">
+  <div class="w3-panel w3-red">
+     <h1>Error {{ error.code }}</h1>
+  </div>
+  <div class="w3-container w3-padding-16">
+  <h3>Whoops....</h3>
+  <p>
+    {{ error.description }}
+  </p>
+  <a href="{{ url_for('index') }}">Index page</a>
+  <br/>
+  </div>
+</div>
+{% endblock %}
