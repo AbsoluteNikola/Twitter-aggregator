@@ -1,9 +1,9 @@
 {% extends "base_info.html.j2" %}
 {% block title %}User{% endblock title %}
 {% block info_title %}
-  <h1>Hello {{ user.name }}</h1>
+  <h1>Hello {{ panel.name|e }}</h1>
   <h3>Your info:</h3>
 {% endblock info_title %}
 {% block info_content %}
-  {{ user.text }}
+  {{ panel.text }}
 {% endblock %}

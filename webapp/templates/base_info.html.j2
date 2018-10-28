@@ -1,11 +1,22 @@
 {% extends "base.html.j2" %}
 {% block content %}
+{% for panel in info %}
 <div class="w3-container">
   <div class="w3-panel w3-teal">
-    {% block info_title %}{% endblock %}
+    {% block info_title scoped %}{% endblock %}
   </div>
   <div class="w3-container w3-padding-16">
-    {% block info_content %}{% endblock %}
+    {% block info_content scoped %}{% endblock %}
   </div>
 </div>
+{% else %}
+<div class="w3-container">
+  <div class="w3-panel w3-teal">
+    Congrats
+  </div>
+  <div class="w3-container w3-padding-16">
+    You've found a bug.
+  </div>
+</div>
+{% endfor %}
 {% endblock content %}

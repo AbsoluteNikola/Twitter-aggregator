@@ -1,20 +1,19 @@
-from webapp import app
-from .config import c_key, c_secret
-from flask import session, redirect, request, url_for, render_template, redirect, make_response
-from aggregator import User
+from os import urandom
+from time import time
+from hashlib import md5, sha1
+from hmac import new as hmac_new
+from base64 import b64encode
+from itertools import chain
 from json import dumps, loads, JSONDecodeError
 from urllib.parse import quote_plus as quote
 import requests as rq
-from time import time
-from hashlib import md5, sha1
-from os import urandom
-from base64 import b64encode
-from itertools import chain
 from pprint import pprint
+from flask import session, redirect, request, url_for, render_template, redirect, make_response
 from twitter.api import Api
-import hmac
+from webapp import app
+from .config import c_key, c_secret
+from aggregator import User
 
-globtoken = None
 twitter_rq_token = 'https://api.twitter.com/oauth/request_token'
 twitter_auth_red = 'https://api.twitter.com/oauth/authenticate'
 twitter_ac_token = 'https://api.twitter.com/oauth/access_token'
@@ -35,7 +34,7 @@ def sign_request(method: str, url: str, parameters: dict, **kwargs) -> str:
 
 
 def hmac_sha1(msg, consumer_key='', access_token=''):
-    hashed = hmac.new(f'{consumer_key}&{access_token}'.encode('ascii'), msg.encode('ascii'), sha1)
+    hashed = hmac_new(f'{consumer_key}&{access_token}'.encode('ascii'), msg.encode('ascii'), sha1)
     return quote(b64encode(hashed.digest()).decode('ascii'))
 
 
@@ -63,7 +62,8 @@ def make_api_request(method, url, params=None, payload=None, creds=None, access_
     payload_parts.sort(key=lambda x: x[0])
     bin_data = b'&'.join([(f'{key}={val}').encode() for key, val in payload_parts])
     # Make request
-    resp = rq.__getattribute__(method.lower())(url, params=params, headers=headers, data=bin_data)
+    http_method = rq.__getattribute__(method.lower())
+    resp = http_method(url, params=params, headers=headers, data=bin_data)
     # pprint(resp)
     # if not resp.ok:
     #    raise ValueError(resp.text)
@@ -120,7 +120,7 @@ def verify_credentials():
 def login():
     token = get_request_token()
     if token['oauth_callback_confirmed'] != 'true':
-        return render_template('404.html'), 401  # !!!!!
+        return render_template('errors.html.j2', error={'code': 401, 'description': 'Unauthorized request'}), 401
     session['oauth_token'] = token['oauth_token']
     session['oauth_token_secret'] = token['oauth_token_secret']
     return redirect(twitter_auth_red + "?oauth_token={}".format(session['oauth_token']), code=302)
@@ -131,7 +131,7 @@ def authorized():
     token = request.args.get('oauth_token')
     verifier = request.args.get('oauth_verifier')
     if token != session['oauth_token']:
-        return render_template("404.html"), 401  # !!!
+        return render_template('errors.html.j2', error={'code': 401, 'description': 'Unauthorized request'}), 401
     access_token = get_access_token(token, verifier)
     session['oauth_access_token'] = access_token['oauth_token']
     session['oauth_access_token_secret'] = access_token['oauth_token_secret']
