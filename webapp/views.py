@@ -1,4 +1,4 @@
-from webapp import app, login
+from webapp import app, login, feed
 from aggregator import Twit, User
 from functools import wraps
 from pprint import pprint

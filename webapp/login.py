@@ -12,7 +12,6 @@ from flask import session, redirect, request, url_for, render_template, redirect
 from twitter.api import Api
 from webapp import app
 from .config import c_key, c_secret
-from aggregator import User
 
 twitter_rq_token = 'https://api.twitter.com/oauth/request_token'
 twitter_auth_red = 'https://api.twitter.com/oauth/authenticate'
@@ -123,6 +122,8 @@ def login():
         return render_template('errors.html.j2', error={'code': 401, 'description': 'Unauthorized request'}), 401
     session['oauth_token'] = token['oauth_token']
     session['oauth_token_secret'] = token['oauth_token_secret']
+    next_redir = request.args.get('next', url_for('index'))
+    if not 'next' in session: session['next'] = next_redir
     return redirect(twitter_auth_red + "?oauth_token={}".format(session['oauth_token']), code=302)
 
 
@@ -135,7 +136,7 @@ def authorized():
     access_token = get_access_token(token, verifier)
     session['oauth_access_token'] = access_token['oauth_token']
     session['oauth_access_token_secret'] = access_token['oauth_token_secret']
-    session['twitter_user_id'] = access_token['user_id']
+    session['twitter_user_id'] = int(access_token['user_id'])
     session['twitter_screen_name'] = access_token['screen_name']
     pprint(verify_credentials())
     # a = Api(
@@ -146,6 +147,7 @@ def authorized():
     # )
     # pprint(a.VerifyCredentials())
     session['logged_in'] = True
+    print("Authorized", session.__repr__())
     redirect_url = session.pop('next', url_for('index'))
     return redirect(redirect_url)
 

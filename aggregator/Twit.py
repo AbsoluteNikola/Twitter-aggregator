@@ -60,6 +60,13 @@ class Twit(Base):
         self.text = info[3]
         self.keywords = get_keywords(self)
 
+    def __html__(self):
+        return f'''<div class="twit">
+        <div class="twit-author">{self.user}</div>
+        <div class="twit-text">{self.text}</div>
+        </div>
+        '''
+
     def __repr__(self):
         return f"<Twit id={self.id} user='{self.user}' created_at={self.created_at} text='{self.text}'>"
 

@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>{% block title %}{% endblock %} | Twitter Aggregator</title>
+    <title>{% block title %}Hello{% endblock title %} | Twitter Aggregator</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
     <!-- <link rel="stylesheet" type="text/css" href="https://www.w3schools.com/w3css/4/w3pro.css"> -->
     <link rel="stylesheet" type="text/css" href="https://www.w3schools.com/w3css/4/w3.css">
-    {% block head %}{% endblock %}
+    {% block head %}{% endblock head %}
   </head>
   <body>
     <div id="top">
@@ -22,17 +22,19 @@
           <a href="{{ url_for('logout') }}" class="w3-button">
             Log out.
           </a>
+        </div>
         {% else %}
         <div class="auth w3-cell w3-container w3-padding-24 w3-pale-red" id="auth-neg">
           You are not logged in
-          <a href="{{ url_for('login') }}">
+          <a href="{{ url_for('login') + '?%s=%s' % ('next', request.endpoint) }}">
             <img src="{{ url_for('static', filename='twitter_signin.png') }}"">
           </a>
-        {% endif %}
         </div>
+        {% endif %}
       </div>
-      <div id="content">
+      <div class="w3-container" id="content">
         {% block content %}
+        This is a bug.
         {% endblock content %}
       </div>
     </div>

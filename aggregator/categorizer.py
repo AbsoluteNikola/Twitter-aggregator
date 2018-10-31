@@ -31,4 +31,6 @@ def get_keywords(twit):
     keywords = [(score, lemm.lemmatize(word)) for score, word in rake.get_ranked_phrases_with_scores()]
     keywords.append((1, twit.user))
 
+    logger.debug("Converted '%s' to %s" % (text, keywords))
+
     return keywords

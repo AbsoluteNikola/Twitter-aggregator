@@ -13,7 +13,7 @@ def export_cache(user:User, cache):
     file = cachedir / user.id
     with open(file, "r") as f:
         for twit in cache:
-            f.write(twit[0], "\n")
+            f.write("%d:%d\n" % twit)
 
 async def update_cache(user:User):
     logger.info("Updating cache for user %s" % str(user))

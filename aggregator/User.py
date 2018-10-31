@@ -42,7 +42,7 @@ class User(Base):
     __tablename__ = "users"
     __table_args__ = {'useexisting': True}
 
-    id = Column(Integer, primary_key=True)
+    user_id = Column('id', Integer, primary_key=True, nullable=False)
     registered = Column(DateTime, nullable=False)
     #oauth_token = Column(Unicode(128), nullable=False)
     #oauth_secret = Column(Unicode(128), nullable=False)
@@ -50,12 +50,13 @@ class User(Base):
     # Just another jsoned value. There should be a better way to make these
     _preference_vector_enc = Column("preference", Unicode(2048), nullable=False)
 
-    token_type = Column(String(20))
-    access_token = Column(String(48), nullable=False)
-    refresh_token = Column(String(48))
-    expires_at = Column(Integer, default=0)
+    # token_type = Column(String(20))
+    # access_token = Column(String(48), nullable=False)
+    # refresh_token = Column(String(48))
+    # expires_at = Column(Integer, default=0)
 
-    def __init__(self, token, secret):
+    def __init__(self, user_id, token=None, secret=None):
+        self.user_id = user_id
         self.registered = datetime.now()
         self.preference = {}
         self.oauth_token = token
@@ -87,26 +88,26 @@ class User(Base):
                 pass
             self.preference[key] = curr_pref + val * score # Positive or negative
 
-    @property
-    def token(self):
-        return dict(
-            access_token=self.access_token,
-            token_type=self.token_type,
-            refresh_token=self.refresh_token,
-            expires_at=self.expires_at,
-        )
+    # @property
+    # def token(self):
+    #     return dict(
+    #         access_token=self.access_token,
+    #         token_type=self.token_type,
+    #         refresh_token=self.refresh_token,
+    #         expires_at=self.expires_at,
+    #     )
 
-    @token.setter
-    def token_set(self, token):
-        self.access_token = token['access_token']
-        self.token_type = token['token_type']
-        self.expires_at = token['expires_at']
-        self.refresh_token = token['refresh_token']
+    # @token.setter
+    # def token_set(self, token):
+    #     self.access_token = token['access_token']
+    #     self.token_type = token['token_type']
+    #     self.expires_at = token['expires_at']
+    #     self.refresh_token = token['refresh_token']
 
     def __repr__(self):
-        return f"<User id={self.id} registered_at={self.registered}>"
+        return f"<User id={self.user_id} registered_at={self.registered}>"
 
     def __str__(self):
-        return f"<User {self.id}>"
+        return f"<User {self.user_id}>"
 
 Base.metadata.create_all(engine)

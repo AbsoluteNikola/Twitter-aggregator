@@ -37,11 +37,13 @@ def get_timeline(users):
 
     global_timeline.sort(key=lambda x: x.created_at_in_seconds)
     # status.created_at_in_seconds - returns utc timestamp
+    logger.debug("Global timeline %s" % global_timeline)
     global_timeline = [Twit(strip_status(status)) for status in global_timeline]
     return global_timeline
 
 async def update_db(users):
     timeline = get_timeline(users)
+    logger.debug("Twit list %s" % timeline)
     for twit in timeline:
         old_tw = session.query(Twit).filter(Twit.id == twit.id).one_or_none()
         if not old_tw:

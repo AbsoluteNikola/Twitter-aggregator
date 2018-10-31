@@ -9,7 +9,10 @@ config.read('config.conf')
 
 c_key = config['TWITTER']['consumer_key']
 c_secret = config['TWITTER']['consumer_secret']
-
+cachedir = Path(config['cache']['dir'])
+if not cachedir.exists() or not cachedir.is_dir():
+    raise ValueError("Wrong cachedir path")
+dbpath = config['DataBase']['path']
 
 # Logging config
 simple_formatter = logging.Formatter('%(levelname)-8s %(name)-24s: %(message)s')

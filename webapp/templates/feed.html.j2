@@ -1,0 +1,11 @@
+{% extends "base.html.j2" %}
+{% block title %}Feed{% endblock title %}
+{% block content %}
+<div id="feed-div">
+    {% for twit in feed %}
+        {{ twit }}
+    {% else %}
+    <h3>No twits</h3>
+    {% endfor %}
+</div>
+{% endblock content %}

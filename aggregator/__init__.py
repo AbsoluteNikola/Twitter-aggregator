@@ -10,5 +10,6 @@ __version__ = "0.1"
 
 from .twitterHandler import keep_twits_updated
 from .cachingHandler import keep_cache_updated
+from .databaseManager import add_subscription
 from .Twit import Twit
 from .User import User

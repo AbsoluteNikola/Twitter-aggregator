@@ -2,9 +2,8 @@
 {% block title %}Index{% endblock title %}
 {% block head %}{% endblock head %}
 {% block content %}
-<div class="w3-container" id="index-div">
-  <a href="{{ url_for('user') }}"> About you</a>
-  <br/>
-  Nothing to see here
+<div id="index-div">
+  <a href="{{ url_for('user') }}">About you</a> <br/>
+  <a href="{{ url_for('feed') }}">Your feed</a> <br/>
 </div>
 {% endblock content %}
