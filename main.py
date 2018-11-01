@@ -3,6 +3,7 @@ import sys
 import asyncio
 import uvloop
 import argparse
+from multiprocessing import Process
 from aggregator import keep_twits_updated, keep_cache_updated, add_subscription
 from webapp import app
 from pprint import pprint
@@ -28,25 +29,21 @@ def setup_parser():
 
 
 def run(what):
-    asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
-    loop = asyncio.get_event_loop()
+    if what == 0:
+        p = Process(target=keep_twits_updated)
+        # keep_twits_updated()
+    elif what == 1:
+        p = Process(target=keep_cache_updated)
+        # keep_cache_updated()
+    elif what == 2:
+        # p = Process(target=app.run, kwargs={'host': "0.0.0.0", 'debug': True})
+        app.run(host="0.0.0.0", debug=True)
 
-    available_coros = [keep_twits_updated(), keep_cache_updated()]
-
-    if what < 0 or what >= len(available_coros): raise ValueError
-    
-    coro = loop.create_task(available_coros[what])
-
+    p.start()
     try:
-        logger.info("Starting operation")
-        loop.run_forever()
+        p.join()
     except KeyboardInterrupt:
-        logger.info("Interrupted")
-    finally:
-        coro.cancel()
-        loop.stop()
-    loop.close()
-
+        p.terminate()
 
 if __name__ == "__main__":
     parser = setup_parser()
@@ -57,7 +54,7 @@ if __name__ == "__main__":
         elif args.run == "cache":
             run(1)
         elif args.run == "web":
-            app.run(host="0.0.0.0", debug=True)
+            run(2)
     elif args.command == "util":
         if args.newsubs:
             for sub in args.newsubs:

@@ -61,13 +61,18 @@ def read_user_cache(user:User):
     cache = []
     if file.exists():
         with open(file, "r") as f:
-            cache = [ tuple(twit.split(":")) for twit in f.readlines() ]
+            cache = [ tuple(map(int, twit.split(":"))) for twit in f.readlines() ]
     return cache
 
 def get_feed():
     twits = []
     if user:
         twits = read_user_cache(user)
+        twits.sort(key=lambda x: x[1])
+        twits = [
+            db.query(Twit).filter(Twit.id == twit[0]).one_or_none()
+            for twit in twits
+        ]
     else:
         oldest_twit = datetime.now() - timedelta(hours=24)
         twits = db.query(Twit).filter(Twit.created_at > oldest_twit).all()

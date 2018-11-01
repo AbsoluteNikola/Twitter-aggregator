@@ -7,3 +7,4 @@ users.json
 !*.conf.example
 *.db
 .DS_Store
+tempcache
