@@ -1,12 +1,40 @@
 {% extends "base.html.j2" %}
+
+{% macro render_twit(twit) -%}
+<div class="twit w3-container">
+  <input type="hidden" name="id" value="{{ twit.id }}"/>
+  <div class="twit-info w3-cell-row">
+    <div class="twit-author w3-cell">
+      {{ twit.user }}
+    </div>
+    <div class="twit-body w3-cell">
+      {{ twit.text|e }}
+    </div>
+  </div>
+  <div class="twit-tools-row">
+    <div class="twit-tools">
+      <div class="twit-tools-item twit-tools-like w3-cell">
+        &lt;3
+      </div>
+      <div class="twit-tools-item twit-tools-dislike w3-cell">
+        &lt;/3
+      </div>
+    </div>
+  </div>
+</div>
+{%- endmacro %}
+
 {% block title %}Feed{% endblock title %}
+{% block head %}
+<script src="{{ url_for('static', filename='feed.js') }}"></script>
+{% endblock head %}
 {% block content %}
 <div id="feed-div">
-    {% for twit in feed %}
-        {{ twit }}
-        <br/>
-    {% else %}
-    <h3>No twits</h3>
-    {% endfor %}
+  {% for twit in feed %}
+    {{ render_twit(twit) }}
+    <br/>
+  {% else %}
+  <h3>No twits</h3>
+  {% endfor %}
 </div>
 {% endblock content %}

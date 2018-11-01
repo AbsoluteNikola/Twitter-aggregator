@@ -72,7 +72,7 @@ class User(Base):
 
     def score_twit(self, twit):
         score = 0
-        for key, val in twit.keywords:
+        for val, key in twit.keywords:
             try:
                 score += self.preference[key] * val
             except KeyError:
@@ -80,7 +80,7 @@ class User(Base):
         return score
     
     def update_pref(self, twit, score):
-        for key, val in twit.keywords:
+        for val, key in twit.keywords:
             curr_pref = 1
             try:
                 curr_pref = self.preference[key]

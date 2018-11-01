@@ -1,3 +1,44 @@
+.hidden {
+    display: none;
+    height: 0px;
+    width: 0px;
+}
+
 #forehead {
     height: 4ex;
+}
+
+#content {
+    padding-top: 1em;
+}
+
+#feed-div {
+    width: 50em;
+    align-content: center;
+}
+
+.twit-author {
+    background-color: lightgray;
+    width: 10em;
+}
+
+.twit-tools-row {
+    background-color: gray;
+    width: 100%;
+    overflow: auto;
+}
+
+.twit-tools {
+    float: right;
+    margin-right: 0.1em;
+}
+
+.twit-tools-item {
+    height: 2em;
+    width: 2em;
+    padding: 0.1em;
+}
+
+.twit-tools-like, .twit-tools-dislike {
+    color: white;
 }
