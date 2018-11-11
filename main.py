@@ -30,20 +30,20 @@ def setup_parser():
 
 def run(what):
     if what == 0:
-        p = Process(target=keep_twits_updated)
-        # keep_twits_updated()
+        # p = Process(target=keep_twits_updated)
+        keep_twits_updated()
     elif what == 1:
-        p = Process(target=keep_cache_updated)
-        # keep_cache_updated()
+        # p = Process(target=keep_cache_updated)
+        keep_cache_updated()
     elif what == 2:
         # p = Process(target=app.run, kwargs={'host': "0.0.0.0", 'debug': True})
         app.run(host="0.0.0.0", debug=True)
 
-    p.start()
-    try:
-        p.join()
-    except KeyboardInterrupt:
-        p.terminate()
+    # p.start()
+    # try:
+    #     p.join()
+    # except KeyboardInterrupt:
+    #     p.terminate()
 
 if __name__ == "__main__":
     parser = setup_parser()

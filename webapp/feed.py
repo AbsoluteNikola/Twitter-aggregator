@@ -13,6 +13,7 @@ from sqlalchemy import create_engine, MetaData, Table, Column, String
 from sqlalchemy.orm import sessionmaker
 from .config import dbpath, cachedir
 
+logger = app.logger
 engine = create_engine(dbpath)
 Sessionmk = sessionmaker(bind=engine)
 
@@ -32,17 +33,18 @@ def teardown_db(ctx):
 def get_user():
     try:
         if session['logged_in'] == True:
-            print("Current user: %s (id %d)" % (session['twitter_screen_name'], session['twitter_user_id']))
+            # print("Current user: %s (id %d)" % (session['twitter_screen_name'], session['twitter_user_id']))
             if 'user' not in g:
                 user = db.query(User).filter(User.user_id == session['twitter_user_id']).one_or_none()
                 if not user:
                     user = User(session['twitter_user_id'],
                                 session['oauth_access_token'],
                                 session['oauth_access_token_secret'])
-                    print("New user", user)
+                    # print("New user", user)
+                    logger.debug("New user %s" % user.user_id)
                     db.add(user)
                 g.user = user
-            pprint(g.user)
+            logger.debug("Current user %s" % g.user)
             return g.user        
         else:
             return None
@@ -87,7 +89,7 @@ def xhr_handler(func):
         else:
             data = request.form
         data = dict(data)
-        print(data)
+        logger.info("AJAX data %s" % data)
         ret = func(data, *args, **kwargs)
         return ret
     return deco
